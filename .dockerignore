@@ -1,0 +1,12 @@
+.venv
+.git
+.gitignore
+__pycache__
+.pytest_cache
+mlruns
+mlflow.db
+cs-training.csv
+*.ipynb
+*.png
+*.zip
+tests

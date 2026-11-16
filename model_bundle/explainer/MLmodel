@@ -1,0 +1,42 @@
+artifact_path: file:c:/Users/Lenovo/Desktop/Nouveau dossier/mlruns/2/models/m-f311aa8f00d74dbcaf960f87bfee9ec3/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.14.2
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.9.1
+    skops_trusted_types: null
+is_signature_from_type_hint: false
+mlflow_version: 3.16.1
+model_id: m-f311aa8f00d74dbcaf960f87bfee9ec3
+model_size_bytes: 501241
+model_uuid: m-f311aa8f00d74dbcaf960f87bfee9ec3
+prompts: null
+run_id: 11ebc65482ff4453a27f8935b3205edf
+saved_input_example_info:
+  artifact_path: input_example.json
+  pandas_orient: split
+  serving_input_path: serving_input_example.json
+  type: dataframe
+signature:
+  inputs: '[{"type": "double", "name": "RevolvingUtilizationOfUnsecuredLines", "required":
+    true}, {"type": "long", "name": "age", "required": true}, {"type": "long", "name":
+    "NumberOfTime30-59DaysPastDueNotWorse", "required": true}, {"type": "double",
+    "name": "DebtRatio", "required": true}, {"type": "double", "name": "MonthlyIncome",
+    "required": true}, {"type": "long", "name": "NumberOfOpenCreditLinesAndLoans",
+    "required": true}, {"type": "long", "name": "NumberOfTimes90DaysLate", "required":
+    true}, {"type": "long", "name": "NumberRealEstateLoansOrLines", "required": true},
+    {"type": "long", "name": "NumberOfTime60-89DaysPastDueNotWorse", "required": true},
+    {"type": "double", "name": "NumberOfDependents", "required": true}]'
+  outputs: '[{"type": "long", "required": true}]'
+  params: null
+type_hint_from_example: false
+utc_time_created: '2026-09-29 16:43:53.034092'

@@ -1,0 +1,54 @@
+{
+  "dataframe_split": {
+    "columns": [
+      "RevolvingUtilizationOfUnsecuredLines",
+      "age",
+      "NumberOfTime30-59DaysPastDueNotWorse",
+      "DebtRatio",
+      "MonthlyIncome",
+      "NumberOfOpenCreditLinesAndLoans",
+      "NumberOfTimes90DaysLate",
+      "NumberRealEstateLoansOrLines",
+      "NumberOfTime60-89DaysPastDueNotWorse",
+      "NumberOfDependents"
+    ],
+    "data": [
+      [
+        0.019252081,
+        66,
+        0,
+        0.433925811,
+        5175.0,
+        13,
+        0,
+        1,
+        0,
+        0.0
+      ],
+      [
+        0.454220826,
+        78,
+        0,
+        0.873533246,
+        2300.0,
+        7,
+        0,
+        1,
+        0,
+        2.0
+      ],
+      [
+        0.077572174,
+        59,
+        0,
+        0.172881669,
+        10833.0,
+        5,
+        0,
+        1,
+        0,
+        0.0
+      ]
+    ]
+  }
+}
