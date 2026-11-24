@@ -24,8 +24,8 @@ import httpx
 from mcp.server.mcpserver import MCPServer
 from mcp.server.mcpserver.exceptions import ToolError
 
-logging.basicConfig(level=logging.INFO, stream=sys.stderr,
-                    format="%(asctime)s %(levelname)s %(name)s: %(message)s")
+#logging.basicConfig(level=logging.INFO, stream=sys.stderr, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
+level=os.getenv("MCP_LOG_LEVEL", "INFO"),
 log = logging.getLogger("credit-mcp")
 
 mcp = MCPServer("credit-scoring")
@@ -104,7 +104,11 @@ def _scoring_payload(applicant_id: int) -> dict[str, Any]:
     return {**_fetch("applicants", applicant_id, PROFILE_FIELDS),
             **_fetch("credit_history", applicant_id, HISTORY_FIELDS)}
 
-
+def _readable(result: dict) -> dict:
+    """Add percentages computed in code, so the LLM never converts numbers itself."""
+    return {**result,
+            "default_probability_pct": f"{result['default_probability'] * 100:.1f}%",
+            "threshold_pct": f"{result['threshold'] * 100:.1f}%"}
 # --------------------------------------------------------------------------- tools
 @mcp.tool()
 def get_applicant(applicant_id: int) -> dict:
@@ -140,8 +144,7 @@ def predict_credit_risk(applicant_id: int) -> dict:
     """
     log.info("predict_credit_risk(%s)", applicant_id)
     result = _api_post("/predict", _scoring_payload(applicant_id))
-    return {"applicant_id": applicant_id, **result}
-
+    return {"applicant_id": applicant_id, **_readable(result)}
 
 @mcp.tool()
 def explain_prediction(applicant_id: int, top_k: int = 5) -> dict:
@@ -156,7 +159,7 @@ def explain_prediction(applicant_id: int, top_k: int = 5) -> dict:
     result = _api_post("/explain", _scoring_payload(applicant_id), params={"top_k": top_k})
     for item in result.get("top_contributions", []):
         item["feature"] = FEATURE_NAMES.get(item["feature"], item["feature"])
-    return {"applicant_id": applicant_id, **result}
+    return {"applicant_id": applicant_id, **_readable(result)}
 
 
 if __name__ == "__main__":

@@ -6,14 +6,14 @@ jobs:
   test:
     runs-on: ubuntu-latest #use a Linux machine provided by GitHub
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.14"
 
       - name: Install dependencies
-        run: pip install -r requirements.txt pytest httpx "mcp>=2"
+        run: pip install -r requirements.txt -r requirements-agent.txt pytest
 
       - name: Run tests
         run: pytest -q
@@ -24,6 +24,6 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Build Docker image
         run: docker build -t credit-scoring-api .

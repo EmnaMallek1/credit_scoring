@@ -1,0 +1,6 @@
+langchain==1.5.0
+langchain-groq==1.2.0
+langgraph==1.2.22
+mcp>=2
+httpx
+python-dotenv

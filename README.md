@@ -35,7 +35,7 @@ flowchart LR
     D --> E[FastAPI<br/>/predict /explain<br/>in Docker]
     F[(applicants.db<br/>SQLite)] --> G[MCP server<br/>4 read-only tools]
     G -->|HTTP| E
-    H[AI agent / LLM] -->|MCP| G
+    H[LangGraph agent<br/>Groq LLM] -->|MCP| G
 ```
 
 | Component | Role |
@@ -130,6 +130,37 @@ Design choices:
 
 ---
 
+## AI agent (credit memos)
+
+A LangGraph agent powered by a Groq LLM (`openai/gpt-oss-120b`) uses the MCP tools to analyse an applicant and write a short **credit memo**.
+
+```bash
+python -m agent "Analyse applicant 125"
+python -m agent "Is applicant 100 approved?"
+```
+
+```
+Tool calls:
+  -> get_applicant({"applicant_id": 125})
+  -> get_credit_history({"applicant_id": 125})
+  -> explain_prediction({"applicant_id": 125, "top_k": 5})
+
+## Credit memo: applicant 125
+**Decision:** APPROVE · **Risk level:** low
+**Default probability:** 3.4% (threshold: 16.5%) · **Model version:** 1
+...
+**Data quality:** monthly_income missing; debt_ratio = 4090, likely a monthly debt amount rather than a ratio.
+```
+
+How it works:
+
+- The agent chooses its tools depending on the question: a full memo for an analysis, a one-sentence answer for a quick decision.
+- **Guardrails** in the system prompt: every number comes from a tool, no invented explanations, the model's decision is never overridden, data issues are flagged, and the memo is decision support only.
+- Percentages are computed in code by the MCP server, not by the LLM.
+- `langchain-mcp-adapters` only supports `mcp` 1.x, so a small custom adapter (`agent/mcp_tools.py`) converts the MCP 2.x tools into LangChain tools.
+
+Setup: copy `.env.example` to `.env`, add your Groq key, then `pip install -r requirements-agent.txt`. The API must be running.
+
 ## How to run
 
 ### 1. Run the API with Docker (recommended)
@@ -219,14 +250,14 @@ pytest -q
 
 ## Tech stack
 
-Python · pandas · scikit-learn · XGBoost · SHAP · MLflow · FastAPI · Pydantic · Uvicorn · Docker · MCP · SQLite · pytest
+Python, pandas, scikit-learn, XGBoost, SHAP, MLflow, FastAPI, Pydantic, Uvicorn, Docker, MCP, SQLite, pytest, LangChain, LangGraph, Groq
 
 ---
 
 ## Roadmap
 
-- [ ] CI with GitHub Actions (tests on every push, Docker build)
-- [ ] LLM agent (LangGraph) using the MCP tools to write credit memos
+- [x] CI with GitHub Actions (tests on every push, Docker build)
+- [x] LLM agent (LangGraph) using the MCP tools to write credit memos
 - [ ] Streamlit interface for the agent
 - [ ] Prediction logging and data drift monitoring
 - [ ] Cloud deployment of the API
